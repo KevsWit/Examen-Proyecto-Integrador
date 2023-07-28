@@ -14,6 +14,7 @@ export class SingInComponent implements OnInit {
   }
 
   camposLlenos = true;
+  mensajeError: string = '';
     constructor(private ServiceAuth:AuthService, private router:Router){
 
   }
@@ -34,6 +35,7 @@ export class SingInComponent implements OnInit {
         // El servidor responde con el token de autenticación (res.token).
         // Almacenar el token en el localStorage para mantener la sesión.
         localStorage.setItem('auth_token', res.token);
+        this.camposLlenos = false;
 
         // Navegar a la ruta '/admin' después de iniciar sesión correctamente.
         this.router.navigate(['/home']);
@@ -41,7 +43,11 @@ export class SingInComponent implements OnInit {
       (error: any) => {
         // Manejar cualquier error que ocurra durante el proceso de inicio de sesión.
         console.log('Error al iniciar sesión:', error);
-        // Puedes mostrar un mensaje de error al usuario si lo deseas.
+        if (error.status === 401) {
+          this.mensajeError = error.error.error;
+        } else {
+          this.mensajeError = 'Error al intentar iniciar sesión. Por favor, intenta nuevamente más tarde.';
+        }
       }
     );
   }

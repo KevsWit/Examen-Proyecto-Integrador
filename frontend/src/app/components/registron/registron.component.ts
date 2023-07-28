@@ -15,20 +15,17 @@ export class RegistronComponent {
     psw: '',
     role: ''
   }
+  mensajeAviso: string = '';
   constructor(private userService:UsersService){}
   RegistrarUsuario() {
     if (this.validatePassword() && this.validateEmail()) {
-      this.userService.registro(this.NewUser).subscribe(() => {
-        alert('Usuario registrado');
-        this.NewUser = {
-          nombre: '',
-          ci: '',
-          correo: '',
-          usuario: '',
-          psw: '',
-          role: ''
-        };
-      });
+      this.userService.registro(this.NewUser).subscribe(()=>{
+        this.mensajeAviso = 'Registro exitoso'
+        this.resetForm();
+      },()=>{
+        this.mensajeAviso = 'Correo ya en Uso'
+      }
+        )
     } else {
       alert('Por favor, revisa los campos ingresados.');
     }
@@ -42,5 +39,18 @@ export class RegistronComponent {
   validateEmail(): boolean {
     const emailRegex = /^[A-Za-z0-9._%+-]+@(ups\.edu\.ec|est\.ups\.edu\.ec)$/;
     return emailRegex.test(this.NewUser.correo);
+  }
+
+  resetForm() {
+    // Restablece los valores del formulario y el mensaje de aviso
+    this.NewUser = {
+      nombre: '',
+      ci: '',
+      correo: '',
+      usuario: '',
+      role: '',
+      psw: ''
+    };
+    this.mensajeAviso = '';
   }
 }

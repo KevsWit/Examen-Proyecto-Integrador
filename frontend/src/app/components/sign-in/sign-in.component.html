@@ -17,10 +17,14 @@
             <div class="alert alert-warning" *ngIf="!camposLlenos">
               Por favor, complete todos los campos.
             </div>
+            <!-- Mensaje de error específico para correo o contraseña inválidos -->
+            <div class="alert alert-danger" *ngIf="mensajeError && !camposLlenos">
+              {{ mensajeError }}
+            </div>
             <button type="submit" class="btn btn-primary">Ingresar</button>
           </form>
         </div>
       </div>
     </div>
-  </div>
+  </div>
 </div>

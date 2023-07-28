@@ -1,4 +1,4 @@
-<form (ngSubmit)="RegistrarUsuario()">
+<form (ngSubmit)="RegistrarUsuario()" #userForm="ngForm">
     <div>
         <label>Nombre</label>
         <input type="text" [(ngModel)]="NewUser.nombre" name="nombre"> 
@@ -25,4 +25,7 @@
     </div>
     
     <input type="submit" value="Enviar">
+    
+    <div *ngIf="mensajeAviso !== ''" style="color: red;">{{ mensajeAviso }}</div>
 </form>
+<button type="button" (click)="resetForm()">Limpiar formulario</button>

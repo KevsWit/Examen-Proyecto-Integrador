@@ -15,7 +15,7 @@ export class UsersService {
   registro(formValues: {}) :Observable<any>{
     return this.http.post<any>(this.URL, formValues).pipe(
       tap(response => {
-          console.log(response)
+
       })
     )
   }
