@@ -1,0 +1,19 @@
+<h2>Productos en Oferta</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Descripción</th>
+      <th>Precio Actual</th>
+      <th>Descuento</th>
+      <th>Precio Final</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let producto of productosOfertas">
+      <td>{{ producto.descripcion }}</td>
+      <td>{{ producto.precio_actual }}</td>
+      <td>{{ producto.descuento }}</td>
+      <td>{{ producto.precio_final }}</td>
+    </tr>
+  </tbody>
+</table>

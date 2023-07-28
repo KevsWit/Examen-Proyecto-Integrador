@@ -1,0 +1,31 @@
+<ul class="nav nav-pills nav-fill">
+  <li class="nav-item">
+    <a class="nav-link" style="font-size: 2rem;" routerLink="/home">Home</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" style="font-size: 2rem;" routerLink="/ofertas">Ofertas</a>
+  </li>
+  <li class="nav-item" *ngIf="islogin() && isOperator()">
+    <a class="nav-link" style="font-size: 2rem;" routerLink="/facturar">Facturar</a>
+  </li>
+  <!-- Elemento exclusivo para el administrador -->
+  <ng-container *ngIf="islogin() && isAdmin();">
+    <li class="nav-item">
+      <a class="nav-link" style="font-size: 2rem;" routerLink="/registro">Registro Usuarios</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" style="font-size: 2rem;" routerLink="/listaUsuarios">Usuarios</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" style="font-size: 2rem;" routerLink="/gestionProducto">Gestion Productos</a>
+    </li>
+  </ng-container>
+
+  <li class="nav-item">
+    <!-- Muestra el botón "Logout" si el usuario está autenticado, o el botón "Sign In" si no lo está -->
+    <a *ngIf="islogin(); else signInButton" class="nav-link" style="font-size: 2rem;" (click)="logout()">Logout</a>
+    <ng-template #signInButton>
+      <a class="nav-link" style="font-size: 2rem;" routerLink="/signIn">Sign In</a>
+    </ng-template>
+  </li>
+</ul>

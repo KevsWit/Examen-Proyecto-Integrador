@@ -1,0 +1,35 @@
+<h2>Lista de Usuarios</h2>
+<table>
+  <thead>
+    <th>Nombre</th>
+    <th>Cedula</th>
+    <th>Correo</th>
+    <th>Usuario</th>
+    <th>Rol</th>
+  </thead>
+  <tbody>
+    <tr *ngFor="let usuario of usuarios">
+      <td>
+        <input type="text" [(ngModel)]="usuario.nombre" [disabled]="!edicionHabilitada">
+      </td>
+      <td>
+        <input type="text" [(ngModel)]="usuario.ci" [disabled]="!edicionHabilitada">
+      </td>
+      <td>
+        <input type="text" [(ngModel)]="usuario.correo" [disabled]="!edicionHabilitada">
+      </td>
+      <td>
+        <input type="text" [(ngModel)]="usuario.usuario" [disabled]="!edicionHabilitada">
+      </td>
+      <td>
+        <input type="text" [(ngModel)]="usuario.role" [disabled]="!edicionHabilitada">
+      </td>
+      <button *ngIf="edicionHabilitada" (click)="guardarEdicion(usuario)">Guardar</button>
+      <button *ngIf="edicionHabilitada" (click)="EliminarUsuario(usuario)">Eliminar</button>
+    </tr>
+  </tbody>
+</table>
+<button *ngIf="!edicionHabilitada" (click)="habilitarEdicion()">Editar</button>
+
+<!-- Puedes agregar un botón para cancelar la edición -->
+<button *ngIf="edicionHabilitada" (click)="cancelarEdicion()">Cancelar</button>

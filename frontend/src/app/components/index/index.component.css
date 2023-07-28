@@ -1,0 +1,154 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.main {
+    background-image: url('../../../assets/img/portada.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    height: 500px;
+    animation-name: page;
+    animation-delay: 3s;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 80px;
+    box-shadow: 0b 5px 15px rgba(124, 121, 121, 0.06);
+    background: rgba(48, 218, 184, 0.1);
+    z-index: 999;
+    position: sticky;
+    top: 0;
+    left: 0;
+}
+
+#navbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#navbar li {
+    list-style: none;
+    text-decoration: none;
+    padding: 0 20px;
+    position: relative;
+}
+
+#navbar li a {
+    text-decoration: none;
+    color: rgba(149, 102, 35);
+    font-size: 18px;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+#navbar li a:hover, #navbar li a.active {
+    color: rgb(85, 127, 113);
+}
+
+#navbar li a.active::after,
+#navbar li a:hover::after {
+    content: '';
+    width: 30%;
+    height: 2px;
+    background: rgb(85, 127, 113);
+    position: absolute;
+    bottom: -4px;
+    left: 20px;
+}
+
+.info {
+    background-color: rgba(180, 192, 247, 0.7);
+
+    /* Aplica el efecto de desenfoque */
+    backdrop-filter: blur(50px);
+    -webkit-backdrop-filter: blur(25px);
+
+    padding: 15px;
+    color: #000;
+
+    width: 75%;
+    border-radius: 20px;
+
+    text-align: center;
+    font-size: 20px;
+}
+
+@keyframes page {
+    0% {
+        background-image: url("../../../assets/img/portada.jpg")
+    }
+
+    25% {
+        background-image: url("../../../assets/img/portada3.jpg")
+    }
+
+    50% {
+        background-image: url("../../../assets/img/portada5.jpg")
+    }
+
+    75% {
+        background-image: url("../../../assets/img/portada2.jpg")
+    }
+
+    100% {
+        background-image: url("../../../assets/img/portada4.jpg")
+    }
+}
+
+.header {
+    Display: flex;
+    align-items: center;
+    margin-bottom: 80px;
+}
+
+.logo {
+    font-size: 70px;
+    margin-left: 40px;
+    text-shadow: 5px 5px 5px saddlebrown;
+}
+
+.imglogo {
+    margin-left: 30px;
+    margin-top: 20px;
+
+}
+
+li {
+    display: inline;
+    margin: 50px;
+}
+
+input {
+    margin-left: 100px;
+    border-radius: 20px;
+}
+
+.body {
+    margin-left: 90px;
+}
+
+.bg-gray-100 {
+    background-color: rgb(93, 189, 173);
+    border-radius: 15px;
+}
+
+.bg-gray-100 p {
+    font-size: 20px;
+    text-align: center;
+}
+
+.bg-gray-100 h2{
+    color: white;
+}

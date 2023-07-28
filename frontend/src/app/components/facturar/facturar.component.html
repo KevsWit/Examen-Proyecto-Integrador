@@ -1,0 +1,79 @@
+<h1>Facturar</h1>
+<div>
+  <form (ngSubmit)="onSubmit()">
+    <label for="datoHexInput">Código de Tarjeta (DatoHex):</label>
+    <input type="text" id="datoHexInput" name="datoHex" [(ngModel)]="respuestaObtenida" required>
+    <button type="submit">Obtener código</button>
+  </form>
+</div>
+
+<div *ngIf="nuevoProducto.rfid">
+  <h2>Detalles del producto</h2>
+  <form (ngSubmit)="agregarProducto()">
+    <label for="descripcion">Descripción:</label>
+    <input type="text" id="descripcion" name="descripcion" [(ngModel)]="nuevoProducto.descripcion" disabled>
+
+    <label for="unidades">Unidades:</label>
+    <input type="number" id="unidades" name="unidades" [(ngModel)]="nuevoProducto.unidades">
+
+    <label for="precioFinal">Precio Final:</label>
+    <input type="number" id="precioFinal" name="precioFinal" [(ngModel)]="nuevoProducto.precio_final" disabled>
+
+    <label for="valorFinal">Valor Final:</label>
+    <input type="number" id="valorFinal" name="valorFinal" [(ngModel)]="nuevoProducto.unidades * nuevoProducto.precio_final" disabled>
+
+    <button type="submit">Agregar</button>
+  </form>
+</div>
+
+<div *ngIf="errorProductoNoEncontrado">
+  <p>Producto no encontrado. Por favor, verifique el código de tarjeta.</p>
+</div>
+
+<!-- Mostrar formulario para ingresar datos adicionales -->
+<div *ngIf="factura.productos.length > 0">
+  <h2>Datos adicionales de la factura</h2>
+  <form (ngSubmit)="guardarFactura()">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" [(ngModel)]="factura.nombre" required>
+
+    <label for="correo">Correo:</label>
+    <input type="email" id="correo" name="correo" [(ngModel)]="factura.correo" required>
+
+    <label for="telefono">Teléfono:</label>
+    <input type="text" id="telefono" name="telefono" [(ngModel)]="factura.telefono" required>
+
+    <label for="dir">Dirección:</label>
+    <input type="text" id="dir" name="dir" [(ngModel)]="factura.dir" required>
+
+    <label for="fecha">Fecha:</label>
+    <input type="date" id="fecha" name="fecha" [(ngModel)]="factura.fecha" required>
+
+    <label for="cedula">Cédula:</label>
+    <input type="number" id="cedula" name="cedula" [(ngModel)]="factura.cedula" required>
+
+    <h2>Productos agregados</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Descripción</th>
+          <th>Unidades</th>
+          <th>Valor Unitario</th>
+          <th>Valor Final</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let producto of factura.productos">
+          <td>{{ producto.descripcion }}</td>
+          <td>{{ producto.unidades }}</td>
+          <td>{{ producto.valor_unitario }}</td>
+          <td>{{ producto.valor_unitario * producto.unidades }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Total Valor Final: {{ totalValorFinal }}</p>
+
+    <button type="submit">Guardar Factura</button>
+  </form>
+</div>

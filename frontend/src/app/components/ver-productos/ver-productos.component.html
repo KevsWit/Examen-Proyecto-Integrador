@@ -1,0 +1,39 @@
+<h2>Productos</h2>
+<p>En la opción de oferta solo hay dos opciones de ingreso <b>s</b> o <b>n</b></p>
+<table>
+  <thead>
+    <th>Descripción</th>
+    <th>Precio Actual</th>
+    <th>Unidades</th>
+    <th>Oferta</th>
+    <th>Descuento</th>
+    <th>Precio Final</th>
+    <th>Acciones</th>
+  </thead>
+  <tbody>
+    <tr *ngFor="let producto of productos">
+      <td>
+        <input type="text" [(ngModel)]="producto.descripcion">
+      </td>
+      <td>
+        <input type="number" [(ngModel)]="producto.precio_actual">
+      </td>
+      <td>
+        <input type="number" [(ngModel)]="producto.unidades">
+      </td>
+      <td>
+        <input type="text" [(ngModel)]="producto.oferta">
+      </td>
+      <td>
+        <input type="number" [(ngModel)]="producto.descuento" [disabled]="producto.oferta !== 's'">
+      </td>
+      <td>
+        <input type="number" [(ngModel)]="producto.precio_final" [disabled]="producto.oferta !== 's'">
+      </td>
+      <td>
+        <button (click)="editarProducto(producto)">Guardar</button>
+        <button (click)="eliminarProducto(producto.rfid)">Eliminar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

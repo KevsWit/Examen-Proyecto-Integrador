@@ -1,0 +1,42 @@
+<h1>Ingreso de nuevo Producto</h1>
+<div>
+  <form (ngSubmit)="onSubmit()">
+    <label for="datoHexInput">Código de Tarjeta (DatoHex):</label>
+    <input type="text" id="datoHexInput" name="datoHex" [(ngModel)]="respuestaObtenida" required>
+    <button type="submit">Obtener código</button>
+  </form>
+</div>
+
+<div>
+  <form (ngSubmit)="guardarProducto()">
+    <div class="form-group">
+      <label for="descripcionInput">Descripción:</label>
+      <input type="text" class="form-control" id="descripcionInput" name="descripcion" [(ngModel)]="nuevoProducto.descripcion" required>
+    </div>
+    <div class="form-group">
+      <label for="precioActualInput">Precio Actual:</label>
+      <input type="number" class="form-control" id="precioActualInput" name="precio_actual" [(ngModel)]="nuevoProducto.precio_actual" required>
+    </div>
+    <div class="form-group">
+      <label for="unidadesInput">Unidades:</label>
+      <input type="number" class="form-control" id="unidadesInput" name="unidades" [(ngModel)]="nuevoProducto.unidades" required>
+    </div>
+    <div class="form-group">
+      <label for="ofertaInput">Oferta:</label>
+      <select class="form-control" id="ofertaInput" name="oferta" [(ngModel)]="nuevoProducto.oferta" (change)="onChangeOferta()" required>
+        <option value="" disabled selected>Escoja la opción</option>
+        <option value="s">Sí</option>
+        <option value="n">No</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="descuentoInput">Descuento:</label>
+      <input type="number" class="form-control" id="descuentoInput" name="descuento" [(ngModel)]="nuevoProducto.descuento" required [disabled]="!descuentoEditable" (keyup)="actualizarPrecioFinal()">
+    </div>
+    <div class="form-group">
+      <label for="precioFinalInput">Precio Final:</label>
+      <input type="number" class="form-control" id="precioFinalInput" name="precio_final" [(ngModel)]="nuevoProducto.precio_final" required [disabled]="!precioFinalEditable">
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar Producto</button>
+  </form>
+</div>

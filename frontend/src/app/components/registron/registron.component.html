@@ -1,0 +1,28 @@
+<form (ngSubmit)="RegistrarUsuario()">
+    <div>
+        <label>Nombre</label>
+        <input type="text" [(ngModel)]="NewUser.nombre" name="nombre"> 
+    </div>
+    <div>
+        <label>Cedula</label>
+        <input type="text" [(ngModel)]="NewUser.ci" name="cedula"> 
+    </div>
+    <div>
+        <label>Correo Electronico</label>
+        <input type="text" [(ngModel)]="NewUser.correo" name="email"> 
+    </div>
+    <div>
+        <label>Usuario</label>
+        <input type="text" [(ngModel)]="NewUser.usuario" name="usuario"> 
+    </div>
+    <div>
+        <label>Rol</label>
+        <input type="text" [(ngModel)]="NewUser.role" name="usuario"> 
+    </div>
+    <div>
+        <label>Contraseña</label>
+        <input type="text" [(ngModel)]="NewUser.psw" name="passwd"> 
+    </div>
+    
+    <input type="submit" value="Enviar">
+</form>
