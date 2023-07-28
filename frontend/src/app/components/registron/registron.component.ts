@@ -16,7 +16,31 @@ export class RegistronComponent {
     role: ''
   }
   constructor(private userService:UsersService){}
-  RegistrarUsuario(){
-      this.userService.registro(this.NewUser).subscribe()
+  RegistrarUsuario() {
+    if (this.validatePassword() && this.validateEmail()) {
+      this.userService.registro(this.NewUser).subscribe(() => {
+        alert('Usuario registrado');
+        this.NewUser = {
+          nombre: '',
+          ci: '',
+          correo: '',
+          usuario: '',
+          psw: '',
+          role: ''
+        };
+      });
+    } else {
+      alert('Por favor, revisa los campos ingresados.');
+    }
+  }
+
+  validatePassword(): boolean {
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    return passwordRegex.test(this.NewUser.psw);
+  }
+
+  validateEmail(): boolean {
+    const emailRegex = /^[A-Za-z0-9._%+-]+@(ups\.edu\.ec|est\.ups\.edu\.ec)$/;
+    return emailRegex.test(this.NewUser.correo);
   }
 }

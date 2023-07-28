@@ -6,6 +6,7 @@
     <th>Correo</th>
     <th>Usuario</th>
     <th>Rol</th>
+    <th>Clave</th>
   </thead>
   <tbody>
     <tr *ngFor="let usuario of usuarios">
@@ -23,6 +24,9 @@
       </td>
       <td>
         <input type="text" [(ngModel)]="usuario.role" [disabled]="!edicionHabilitada">
+      </td>
+      <td>
+        <input type="text" [(ngModel)]="usuario.psw" [disabled]="!edicionHabilitada">
       </td>
       <button *ngIf="edicionHabilitada" (click)="guardarEdicion(usuario)">Guardar</button>
       <button *ngIf="edicionHabilitada" (click)="EliminarUsuario(usuario)">Eliminar</button>
