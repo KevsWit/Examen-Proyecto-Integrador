@@ -32,48 +32,54 @@ export class FacturarComponent implements OnInit {
     this.productoService.obtenerUltimoDatoHex().subscribe(
       (datoRecibido: string) => {
         this.respuestaObtenida = datoRecibido;
-        // Asignar la respuestaObtenida como dato rfid del nuevoProducto
-        this.nuevoProducto.rfid = this.respuestaObtenida;
-
+  
         // Verificar si existe el producto con el rfid obtenido
         this.productoService.getProductoByRFID(this.respuestaObtenida).subscribe(
           (productos: Producto[]) => {
             if (productos && productos.length > 0) {
+              // Asignar la respuestaObtenida como dato rfid del nuevoProducto
+              this.nuevoProducto.rfid = this.respuestaObtenida;
               // Si se encontró el producto, mostrar los detalles en el formulario
               this.nuevoProducto = productos[0]; // Suponemos que solo hay un producto con el mismo rfid
               this.errorProductoNoEncontrado = false;
             } else {
               // Si no se encontró el producto, mostrar mensaje de error
               this.errorProductoNoEncontrado = true;
+              alert('No hay un producto registrado con el RFID dado');
             }
           },
           (error: any) => {
-            console.error('Error al obtener el producto:', error);
+            alert('Error al obtener el producto: ' + JSON.stringify(error));
           }
         );
       },
       (error: any) => {
-        console.error('Error al obtener el último dato:', error);
+        alert('Error al obtener el último dato: ' + JSON.stringify(error));
       }
     );
   }
+  
 
   agregarProducto() {
-    // Calcular el precio final y agregar el producto al array de productos de la factura
-    const precio_final = this.nuevoProducto.precio_actual * this.nuevoProducto.unidades;
-    const productoFactura: ProductoFactura = {
-      descripcion: this.nuevoProducto.descripcion,
-      unidades: this.nuevoProducto.unidades,
-      valor_unitario: this.nuevoProducto.precio_actual,
-      valor_final: precio_final // Usamos el precio_final calculado
-    };
-    this.factura.productos.push(productoFactura);
+    if (Number.isInteger(this.nuevoProducto.unidades) && this.nuevoProducto.unidades >= 1){
+      // Calcular el precio final y agregar el producto al array de productos de la factura
+      const precio_final = this.nuevoProducto.precio_actual * this.nuevoProducto.unidades;
+      const productoFactura: ProductoFactura = {
+        descripcion: this.nuevoProducto.descripcion,
+        unidades: this.nuevoProducto.unidades,
+        valor_unitario: this.nuevoProducto.precio_actual,
+        valor_final: precio_final // Usamos el precio_final calculado
+      };
+      this.factura.productos.push(productoFactura);
 
-    // Calcular el totalValorFinal de la factura
-    this.totalValorFinal = this.factura.productos.reduce((total, producto) => total + producto.valor_final, 0);
+      // Calcular el totalValorFinal de la factura
+      this.totalValorFinal = this.factura.productos.reduce((total, producto) => total + producto.valor_final, 0);
 
-    // Limpiar los campos para agregar otro producto
-    this.nuevoProducto = new Producto();
+      // Limpiar los campos para agregar otro producto
+      this.nuevoProducto = new Producto();
+    }else{
+      alert('Las unidades no pueden ser menores a 1 ni decimales');
+    }
   }
 
   
@@ -110,7 +116,7 @@ export class FacturarComponent implements OnInit {
     // Asignar el valor total al campo 'valor_total' de la factura
     this.factura.valor_total = this.totalValorFinal;
   
-    // Agregar aquí la lógica para guardar la factura en el servidor
+
     this.facturaService.createFactura(this.factura).subscribe(
       (response) => {
         console.log('Factura guardada:', response);

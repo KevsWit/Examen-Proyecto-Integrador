@@ -102,17 +102,7 @@ usuariosController.deleteUsuario = async (req, res) => {
     }
   };
 
-  
-  
-// gastosController.getUsuarioEstado = async (req, res) => {
-//     const estado = req.params.estado;
-//     try {
-//         const gastosTipo = await Gasto.find({estado:estado});
-//         res.json(gastosTipo);
-//     } catch (error) {
-//         res.status(500).json({ message: "Error al obtener usuarios por estado." });
-//     }
-// }
+
 
 
 

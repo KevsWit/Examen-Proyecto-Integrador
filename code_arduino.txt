@@ -1,0 +1,170 @@
+#include <SPI.h>
+#include <MFRC522.h>
+#include <MFRC522Extended.h>
+#include <deprecated.h>
+#include <require_cpp11.h>
+#include <WiFi.h>
+#include <HTTPClient.h>
+
+//Constants
+#define SS_PIN 5
+#define RST_PIN 0
+
+const char* ssid = "";      // Cambia "TU_SSID_WIFI" por el nombre de tu red WiFi
+const char* password = "";
+
+
+
+MFRC522 rfid(SS_PIN, RST_PIN); // Instance of the class
+MFRC522::MIFARE_Key key;
+// Init array that will store new NUID
+byte nuidPICC[4];
+
+//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+String DatoHex;
+const String UserReg_1 = "23B36511";
+const String UserReg_2 = "B33786A3";
+const String UserReg_3 = "7762C83B";
+//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+void conectarWiFi() {
+  Serial.println();
+  Serial.print("Conectando a ");
+  Serial.println(ssid);
+
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("");
+  Serial.println("Conexión WiFi establecida");
+  Serial.print("Dirección IP: ");
+  Serial.println(WiFi.localIP());
+}
+
+void enviarDatoHexAlServidor(const String& datoHex) {
+  if (WiFi.status() != WL_CONNECTED) {
+    conectarWiFi();
+  }
+
+  // URL del servidor Node.js (reemplaza la dirección IP con la dirección de tu servidor)
+  const char* serverUrl = "http://192.168.100.5:3000/datohex";
+
+  // Construir la URL completa con el valor DatoHex como parámetro
+  String url = String(serverUrl) + "?datoHex=" + datoHex;
+
+  HTTPClient http;
+  http.begin(url);
+  
+  http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+
+  // Construir los datos que se enviarán en el cuerpo de la solicitud POST
+  String postData = "datoHex=" + datoHex;
+
+  int httpResponseCode = http.POST(postData);
+
+  if (httpResponseCode > 0) {
+    String response = http.getString();
+    Serial.println("Respuesta del servidor: " + response);
+  } else {
+    Serial.println("Error en la solicitud HTTP");
+  }
+
+  http.end();
+}
+
+void setup() 
+{
+   Serial.begin(115200);
+   conectarWiFi();
+   SPI.begin(); // Init SPI bus
+   rfid.PCD_Init(); // Init MFRC522
+   Serial.println();
+   Serial.print(F("Reader :"));
+   rfid.PCD_DumpVersionToSerial();
+   for (byte i = 0; i < 6; i++) {
+     key.keyByte[i] = 0xFF;
+   } 
+   DatoHex = printHex(key.keyByte, MFRC522::MF_KEY_SIZE);
+   Serial.println();
+   Serial.println();
+   Serial.println("Iniciando el Programa");
+}
+
+void loop() 
+{
+     // Reset the loop if no new card present on the sensor/reader. This saves the entire process when idle.
+     if ( ! rfid.PICC_IsNewCardPresent()){return;}
+     
+     // Verify if the NUID has been readed
+     if ( ! rfid.PICC_ReadCardSerial()){return;}
+     
+     Serial.print(F("PICC type: "));
+     MFRC522::PICC_Type piccType = rfid.PICC_GetType(rfid.uid.sak);
+     Serial.println(rfid.PICC_GetTypeName(piccType));
+     // Check is the PICC of Classic MIFARE type
+     if (piccType != MFRC522::PICC_TYPE_MIFARE_MINI && piccType != MFRC522::PICC_TYPE_MIFARE_1K && piccType != MFRC522::PICC_TYPE_MIFARE_4K)
+     {
+       Serial.println("Su Tarjeta no es del tipo MIFARE Classic.");
+       return;
+     }
+     
+       Serial.println("Se ha detectado una nueva tarjeta.");
+       
+       // Store NUID into nuidPICC array
+       for (byte i = 0; i < 4; i++) {nuidPICC[i] = rfid.uid.uidByte[i];}
+    
+       DatoHex = printHex(rfid.uid.uidByte, rfid.uid.size);
+       Serial.print("Codigo Tarjeta: "); Serial.println(DatoHex);
+       // Enviar el valor DatoHex al servidor Node.js
+       enviarDatoHexAlServidor(DatoHex);
+       Serial.println();
+
+     // Halt PICC
+     rfid.PICC_HaltA();
+     // Stop encryption on PCD
+     rfid.PCD_StopCrypto1();
+}
+
+
+String printHex(byte *buffer, byte bufferSize)
+{  
+   String DatoHexAux = "";
+   for (byte i = 0; i < bufferSize; i++) 
+   {
+       if (buffer[i] < 0x10)
+       {
+        DatoHexAux = DatoHexAux + "0";
+        DatoHexAux = DatoHexAux + String(buffer[i], HEX);  
+       }
+       else { DatoHexAux = DatoHexAux + String(buffer[i], HEX); }
+   }
+   
+   for (int i = 0; i < DatoHexAux.length(); i++) {DatoHexAux[i] = toupper(DatoHexAux[i]);}
+   return DatoHexAux;
+}
+
+
+
+/* ESP 8266 NODE MCU
+  Vcc <-> 3V3 (o Vin(5V) según la versión del módulo)
+  RST (Reset) <-> D0
+  GND (Tierra) <-> GND
+  MISO (Master Input Slave Output) <-> D6
+  MOSI (Master Output Slave Input) <-> D7
+  SCK (Serial Clock) <-> D5
+  SS/SDA (Slave select) <-> D8
+*/
+
+/* ESP 32 NODE MCU
+  Vcc <-> 3V3 (o Vin(5V) según la versión del módulo)
+  RST (Reset) <-> D22
+  GND (Masse) <-> GND
+  MISO (Master Input Slave Output) <-> 19
+  MOSI (Master Output Slave Input) <-> 23
+  SCK (Serial Clock) <-> 18
+  SS/SDA (Slave select) <-> 5
+*/

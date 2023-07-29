@@ -23,7 +23,7 @@ app.use('/api/facturas',chequearToken,require('./routes/facturas.routes'))
 app.use('/api/productos',require('./routes/productos.routes'))
 app.use('/api/registro',chequearToken,require('./routes/server.routes'))
 app.use('/api/login',require('./routes/usuarios.routes'))
-//app.use('/api/usuarios',require('./routes/usuarios.routes'))
+
 
 app.listen(app.get('puerto'), ()=>{
     console.log('Nombre de la App',app.get('nombreApp'));
@@ -34,7 +34,7 @@ app.post('/datohex', (req, res) => {
     const datoHex = req.body.datoHex; // Obtener el valor DatoHex desde el cuerpo de la solicitud
     console.log("Valor recibido del ESP32:", datoHex);
 
-    // Aquí puedes verificar la lógica para obtener el valor DatoHex correctamente
+
 
     // Actualizar el valor del último dato recibido
     ultimoDatoHex = datoHex;

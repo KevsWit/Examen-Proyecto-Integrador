@@ -18,7 +18,7 @@
               Por favor, complete todos los campos.
             </div>
             <!-- Mensaje de error específico para correo o contraseña inválidos -->
-            <div class="alert alert-danger" *ngIf="mensajeError && !camposLlenos">
+            <div class="alert alert-danger" *ngIf="mensajeError">
               {{ mensajeError }}
             </div>
             <button type="submit" class="btn btn-primary">Ingresar</button>
@@ -26,5 +26,5 @@
         </div>
       </div>
     </div>
-  </div>
+  </div>
 </div>

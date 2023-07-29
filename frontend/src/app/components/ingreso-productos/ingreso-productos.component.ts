@@ -27,8 +27,23 @@ export class IngresoProductosComponent implements OnInit {
     this.productoService.obtenerUltimoDatoHex().subscribe(
       (datoRecibido: string) => {
         this.respuestaObtenida = datoRecibido;
-        // Asignar la respuestaObtenida como dato rfid del nuevoProducto
+        // Verificar si el datohex (rfid) ya existe en la base de datos
+    this.productoService.getProductoByRFID(this.respuestaObtenida).subscribe(
+      (productos: Producto[]) => {
+        if (productos && productos.length > 0) {
+          // El datohex (rfid) ya existe, mostrar mensaje de error y no guardar el producto
+          alert('El datohex (rfid) ya existe en la base de datos. No se puede guardar el producto.');
+          window.location.reload();
+        } else {
+          // Asignar la respuestaObtenida como dato rfid del nuevoProducto
         this.nuevoProducto.rfid = this.respuestaObtenida;
+        }
+      },
+      (error: any) => {
+        alert('Error al verificar el datohex (rfid) en la base de datos: ' + JSON.stringify(error));
+      }
+    );
+        
       },
       (error: any) => {
         console.error('Error al obtener el último dato:', error);
@@ -42,25 +57,51 @@ export class IngresoProductosComponent implements OnInit {
       (productos: Producto[]) => {
         if (productos && productos.length > 0) {
           // El datohex (rfid) ya existe, mostrar mensaje de error y no guardar el producto
-          console.error('El datohex (rfid) ya existe en la base de datos. No se puede guardar el producto.');
+          alert('El datohex (rfid) ya existe en la base de datos. No se puede guardar el producto.');
         } else {
-          // El datohex (rfid) no existe, guardar el nuevo producto en el servidor
-          this.productoService.createProducto(this.nuevoProducto).subscribe(
-            (productoGuardado: Producto) => {
-              console.log('Producto guardado:', productoGuardado);
-              // Realiza alguna acción adicional si lo deseas, como limpiar el formulario o mostrar un mensaje de éxito.
-            },
-            (error: any) => {
-              console.error('Error al guardar el producto:', error);
-            }
-          );
+          // Validar campos antes de guardar el nuevo producto
+          if (this.validateFields()) {
+            // El datohex (rfid) no existe, guardar el nuevo producto en el servidor
+            this.productoService.createProducto(this.nuevoProducto).subscribe(
+              (productoGuardado: Producto) => {
+                alert('Producto guardado: ' + JSON.stringify(productoGuardado));
+              },
+              (error: any) => {
+                alert('Error al guardar el producto: ' + JSON.stringify(error));
+              }
+            );
+          } else {
+            // Mostrar mensaje de error si algún campo no cumple con las validaciones
+            alert('Por favor, revisa los campos ingresados.');
+          }
         }
       },
       (error: any) => {
-        console.error('Error al verificar el datohex (rfid) en la base de datos:', error);
+        alert('Error al verificar el datohex (rfid) en la base de datos: ' + JSON.stringify(error));
       }
     );
   }
+  
+  validateFields(): boolean {
+    // Validar que precio_actual sea mayor o igual a cero
+    if (this.nuevoProducto.precio_actual < 0) {
+      return false;
+    }
+  
+    // Validar que unidades sea mayor o igual a uno y no sea un valor decimal
+    if (!Number.isInteger(this.nuevoProducto.unidades) || this.nuevoProducto.unidades < 1) {
+      return false;
+    }
+  
+    // Validar que descuento sea mayor o igual a cero
+    if (this.nuevoProducto.descuento < 0) {
+      return false;
+    }
+  
+    // Todas las validaciones pasaron, devolver true
+    return true;
+  }
+  
 
   onChangeOferta(): void {
     if (this.nuevoProducto.oferta === 's') {

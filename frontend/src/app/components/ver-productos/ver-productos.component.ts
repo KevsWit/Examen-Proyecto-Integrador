@@ -42,7 +42,7 @@ export class VerProductosComponent implements OnInit {
     this.productoService.editProductoByRFID(producto.rfid, producto).subscribe(
       productoEditado => {
         console.log('Producto editado:', productoEditado);
-        // Aquí puedes realizar alguna acción adicional si lo deseas
+        window.location.reload();
       },
       error => console.error(error)
     );
@@ -52,7 +52,7 @@ export class VerProductosComponent implements OnInit {
     this.productoService.deleteProductoByRFID(rfid).subscribe(
       response => {
         console.log(response.message);
-        // Aquí puedes realizar alguna acción adicional si lo deseas
+        window.location.reload();
       },
       error => console.error(error)
     );
